@@ -611,13 +611,11 @@ read['run'] = function(path) {
     if (!required_obj[jspath]) {
       required_obj[jspath] = 1;
       if (!jspath.match(/^(\/\/|http)/)) {
-        console.log(jspath);
         getFile(jspath, function(filevalue) {
           unitefile = filevalue + unitefile;
           nextRead(filevalue);
         });
       } else {
-        console.log(jspath);
         require_ary.unshift(jspath);
         nextRead(filevalue);
       }

@@ -1,8 +1,8 @@
 // main
 (function() {
-    var $ = read('$', 'http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min'),
-        Model = read('Wick.Model'),
+    var Model = read('Wick.Model'),
         LocalStorage = read('Wick.LocalStorage'),
+        $ = read('$', 'http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min'),
         ModelAccessLog = Model.extend({
             init: function() {
                 this._super({

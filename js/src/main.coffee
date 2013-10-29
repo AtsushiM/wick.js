@@ -599,14 +599,12 @@ read['run'] = (path) ->
             required_obj[jspath] = 1
 
             if !jspath.match /^(\/\/|http)/
-                console.log(jspath);
                 getFile jspath, (filevalue) ->
                     unitefile = filevalue + unitefile
                     nextRead filevalue
 
                     return
             else
-                console.log(jspath);
                 require_ary.unshift jspath
 
                 nextRead filevalue
