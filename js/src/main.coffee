@@ -598,23 +598,33 @@ read['run'] = (path) ->
         unless required_obj[jspath]
             required_obj[jspath] = 1
 
-            getFile jspath, (filevalue) ->
-                unitefile = filevalue + unitefile
+            if !jspath.match /^(\/\/|http)/
+                console.log(jspath);
+                getFile jspath, (filevalue) ->
+                    unitefile = filevalue + unitefile
+                    nextRead filevalue
 
-                if result = unitefile.match reg_readmethod
-                    temp = result[1] + ext
+                    return
+            else
+                console.log(jspath);
+                require_ary.unshift jspath
 
-                    unitefile = unitefile.slice result.index + result[0].length
+                nextRead filevalue
 
-                    require_ary.unshift temp
-
-                    return checkReadLoop temp
-
-                loadLoop()
-
-                return
 
         return
+
+    nextRead = (filevalue) ->
+        if result = unitefile.match reg_readmethod
+            temp = result[1] + ext
+
+            unitefile = unitefile.slice result.index + result[0].length
+
+            require_ary.unshift temp
+
+            return checkReadLoop temp
+
+        loadLoop()
 
     loadLoop = () ->
         if src = require_ary.shift()

@@ -601,7 +601,7 @@ read['ns'] = function(keywords, swap) {
 };
 
 read['run'] = function(path) {
-  var checkReadLoop, loadLoop, loaded_paths, require_ary, unitefile;
+  var checkReadLoop, loadLoop, loaded_paths, nextRead, require_ary, unitefile;
   path = path + ext;
   require_ary = [];
   loaded_paths = {};
@@ -610,18 +610,28 @@ read['run'] = function(path) {
     require_ary.unshift(jspath);
     if (!required_obj[jspath]) {
       required_obj[jspath] = 1;
-      getFile(jspath, function(filevalue) {
-        var result, temp;
-        unitefile = filevalue + unitefile;
-        if (result = unitefile.match(reg_readmethod)) {
-          temp = result[1] + ext;
-          unitefile = unitefile.slice(result.index + result[0].length);
-          require_ary.unshift(temp);
-          return checkReadLoop(temp);
-        }
-        loadLoop();
-      });
+      if (!jspath.match(/^(\/\/|http)/)) {
+        console.log(jspath);
+        getFile(jspath, function(filevalue) {
+          unitefile = filevalue + unitefile;
+          nextRead(filevalue);
+        });
+      } else {
+        console.log(jspath);
+        require_ary.unshift(jspath);
+        nextRead(filevalue);
+      }
     }
+  };
+  nextRead = function(filevalue) {
+    var result, temp;
+    if (result = unitefile.match(reg_readmethod)) {
+      temp = result[1] + ext;
+      unitefile = unitefile.slice(result.index + result[0].length);
+      require_ary.unshift(temp);
+      return checkReadLoop(temp);
+    }
+    return loadLoop();
   };
   loadLoop = function() {
     var loadaction, script, src;
